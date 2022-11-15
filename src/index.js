@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { getAlltalkers } = require('./utils/handleTalkers');
+const { generateToken } = require('./utils/generateToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,6 +34,10 @@ app.get('/talker/:id', async (req, res) => {
     res.status(404).send({ 
       message: 'Pessoa palestrante não encontrada', 
     });
+});
+
+app.post('/login', (req, res) => {
+  res.status(HTTP_OK_STATUS).json({ token: generateToken() });
 });
 
 app.listen(PORT, () => {

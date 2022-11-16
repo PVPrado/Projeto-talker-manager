@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAlltalkers, createTalker } = require('./utils/handleTalkers');
+const { getAlltalkers, createTalker, deleteTalker } = require('./utils/handleTalkers');
 const { generateToken } = require('./utils/generateToken');
 const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
@@ -55,10 +55,16 @@ nameValidation,
 ageValidation,
 rateValidation,
 watchDateValidation,
- async (req, res) => {
+async (req, res) => {
   const { name, age, talk } = req.body;
   const newTalker = await createTalker(name, age, talk);
   res.status(201).json(newTalker);
+});
+
+app.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+  await deleteTalker(id);
+  res.status(204).end();
 });
 
 app.listen(PORT, () => {

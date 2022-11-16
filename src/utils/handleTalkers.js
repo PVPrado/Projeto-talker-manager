@@ -19,13 +19,20 @@ const createTalker = async (name, age, talk) => {
     name,
     age,
     talk,
-  };
+   };
   talkers.push(newTalker);
   await writeFile(talkersPath, JSON.stringify(talkers, null, 2));
   return newTalker;
 };
 
+const deleteTalker = async (id) => {
+  const talkers = await getAlltalkers();
+  const delTalker = talkers.filter((t) => +t.id !== +id);
+  await writeFile(talkersPath, JSON.stringify(delTalker, null, 2));
+};
+
 module.exports = {
   getAlltalkers,
   createTalker,
+  deleteTalker,
 };

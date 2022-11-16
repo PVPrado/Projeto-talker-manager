@@ -1,9 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAlltalkers } = require('./utils/handleTalkers');
+const { getAlltalkers, createTalker } = require('./utils/handleTalkers');
 const { generateToken } = require('./utils/generateToken');
 const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
+const talkValidation = require('./middlewares/talkValidation');
+const tokenValidation = require('./middlewares/tokenValidation');
+const nameValidation = require('./middlewares/nameValidation');
+const ageValidation = require('./middlewares/ageValidation');
+const rateValidation = require('./middlewares/rateValidation');
+const watchDateValidation = require('./middlewares/watchDateValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,6 +46,19 @@ app.get('/talker/:id', async (req, res) => {
 
 app.post('/login', emailValidation, passwordValidation, (req, res) => {
   res.status(HTTP_OK_STATUS).json({ token: generateToken() });
+});
+
+app.post('/talker',
+tokenValidation,
+talkValidation,
+nameValidation,
+ageValidation,
+rateValidation,
+watchDateValidation,
+ async (req, res) => {
+  const { name, age, talk } = req.body;
+  const newTalker = await createTalker(name, age, talk);
+  res.status(201).json(newTalker);
 });
 
 app.listen(PORT, () => {

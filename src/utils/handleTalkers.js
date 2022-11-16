@@ -31,8 +31,18 @@ const deleteTalker = async (id) => {
   await writeFile(talkersPath, JSON.stringify(delTalker, null, 2));
 };
 
+const attTalker = async (id, person) => {
+  const talkers = await getAlltalkers();
+  const talker = talkers.filter((t) => t.id === id);
+  const att = { id, ...person };
+  talker.push(att);
+  await writeFile(talkersPath, JSON.stringify(talker, null, 2));
+  return att;
+};
+
 module.exports = {
   getAlltalkers,
   createTalker,
   deleteTalker,
+  attTalker,
 };
